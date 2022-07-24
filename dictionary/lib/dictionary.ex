@@ -4,6 +4,9 @@ defmodule Dictionary do
               |> String.split("\n", trim: true)
 
   @spec random_word :: String.t()
+  @doc """
+  Returns a random word from a compiled list sourced at: ./assets/words.txt.
+  """
   def random_word do
     @world_list
     |> Enum.random()
