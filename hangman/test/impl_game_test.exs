@@ -26,4 +26,13 @@ defmodule ImplGameTest do
            |> Enum.all?(lower_alpha?),
            "Oops, failed with: #{game.letters}"
   end
+
+  test "state doesn't change if game is won or lost" do
+    for state <- [:won, :lost] do
+      game = Game.new_game("wombat")
+      game = Map.put(game, :game_state, state)
+      {new_game, tally} = Game.make_move(game, "x")
+      assert new_game == game
+    end
+  end
 end
