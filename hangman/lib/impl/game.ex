@@ -33,7 +33,7 @@ defmodule Hangman.Impl.Game do
   end
 
   def make_move(game, guess) do
-    accept_guess(game, guess, MapSet.member?(game.used, guess))
+    accept_guess(game, guess)
     |> return_with_tally()
   end
 
@@ -50,11 +50,11 @@ defmodule Hangman.Impl.Game do
     {game, tally(game)}
   end
 
-  defp accept_guess(game, _guess, _already_used = true) do
-    %{game | game_state: :already_used}
-  end
-
-  defp accept_guess(game, guess, _) do
-    %{game | used: MapSet.put(game.used, guess)}
+  defp accept_guess(game, guess) do
+    if MapSet.member?(game.used, guess) do
+      %{game | game_state: :already_used}
+    else
+      %{game | used: MapSet.put(game.used, guess)}
+    end
   end
 end
