@@ -33,7 +33,7 @@ defmodule Hangman.Impl.Game do
   end
 
   def make_move(game, guess) do
-    accept_guess(game, guess)
+    update(game, guess)
     |> return_with_tally()
   end
 
@@ -50,11 +50,29 @@ defmodule Hangman.Impl.Game do
     {game, tally(game)}
   end
 
-  defp accept_guess(game, guess) do
-    if MapSet.member?(game.used, guess) do
-      %{game | game_state: :already_used}
-    else
-      %{game | used: MapSet.put(game.used, guess)}
-    end
+  defp update(game, guess) do
+    duplicate_move? = MapSet.member?(game.used, guess)
+    good_guess? = Enum.member?(game.letters, guess)
+    new_used = MapSet.put(game.used, guess)
+
+    {new_state, new_turns_left} =
+      case {duplicate_move?, good_guess?} do
+        {true, _} -> {:already_used, game.turns_left}
+        {false, true} -> {:good_guess, game.turns_left - 1}
+        {false, false} -> {:bad_guess, game.turns_left - 1}
+      end
+
+    # {new_state, new_turns_left} =
+    #   if(duplicate_move?) do
+    #     {:already_used, game.turns_left}
+    #   else
+    #     if good_guess? do
+    #       {:good_guess, game.turns_left - 1}
+    #     else
+    #       {:bad_guess, game.turns_left - 1}
+    #     end
+    #   end
+
+    %{game | game_state: new_state, turns_left: new_turns_left, used: new_used}
   end
 end

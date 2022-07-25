@@ -57,4 +57,15 @@ defmodule ImplGameTest do
     {game, _tally} = Game.make_move(game, "x")
     assert MapSet.equal?(game.used, MapSet.new(["x", "y"]))
   end
+
+  test "recognize a letter in the word" do
+    game = Game.new_game("hello")
+
+    {game, tally} = Game.make_move(game, "h")
+    assert tally.game_state == :good_guess
+    assert tally.turns_left == 6
+
+    {game, tally} = Game.make_move(game, "x")
+    assert tally.game_state == :bad_guess
+  end
 end
