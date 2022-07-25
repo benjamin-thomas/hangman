@@ -32,10 +32,18 @@ defmodule Hangman.Impl.Game do
   end
 
   defp tally(game) do
+    maybe_reveal = fn letter ->
+      if MapSet.member?(game.used, letter) do
+        letter
+      else
+        "_"
+      end
+    end
+
     %{
       turns_left: game.turns_left,
       status: game.status,
-      letters: [],
+      letters: Enum.map(game.letters, maybe_reveal),
       used: game.used |> MapSet.to_list() |> Enum.sort()
     }
   end
@@ -53,7 +61,7 @@ defmodule Hangman.Impl.Game do
       cond do
         game_over? -> {game.status, game.turns_left}
         duplicate_move? -> {:already_used, game.turns_left}
-        good_guess? -> {:good_guess, game.turns_left - 1}
+        good_guess? -> {:good_guess, game.turns_left}
         not good_guess? -> {:bad_guess, game.turns_left - 1}
       end
 

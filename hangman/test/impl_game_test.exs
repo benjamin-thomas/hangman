@@ -31,7 +31,7 @@ defmodule ImplGameTest do
     for state <- [:won, :lost] do
       game = Game.new_game("wombat")
       game = Map.put(game, :status, state)
-      {new_game, tally} = Game.make_move(game, "x")
+      {new_game, _tally} = Game.make_move(game, "x")
       assert new_game == game
     end
   end
@@ -62,10 +62,11 @@ defmodule ImplGameTest do
     game = Game.new_game("hello")
 
     {game, tally} = Game.make_move(game, "h")
+    assert tally.turns_left == 7
     assert tally.status == :good_guess
-    assert tally.turns_left == 6
+    assert tally.turns_left == 7
 
-    {game, tally} = Game.make_move(game, "x")
+    {_game, tally} = Game.make_move(game, "x")
     assert tally.status == :bad_guess
   end
 
@@ -77,11 +78,36 @@ defmodule ImplGameTest do
     assert tally.status == :bad_guess
 
     {game, tally} = Game.make_move(game, "h")
-    assert tally.turns_left == 5
+    assert tally.turns_left == 6
     assert tally.status == :good_guess
 
-    {game, tally} = Game.make_move(game, "e")
-    assert tally.turns_left == 4
+    {_game, tally} = Game.make_move(game, "e")
+    assert tally.turns_left == 6
     assert tally.status == :good_guess
+  end
+
+  test "can handle a sequence of moves" do
+    [
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["a", :already_used, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], ["a", "e"]],
+      ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], ["a", "e", "x"]]
+    ]
+    |> test_sequence()
+  end
+
+  def test_sequence(script) do
+    game = Game.new_game("hello")
+    Enum.reduce(script, game, &check_move/2)
+  end
+
+  defp check_move([guess, status, turns_left, letters, used], game) do
+    {game, tally} = Game.make_move(game, guess)
+
+    assert tally.status == status
+    assert tally.turns_left == turns_left
+    assert tally.letters == letters
+    assert tally.used == used
+    game
   end
 end
