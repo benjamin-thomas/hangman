@@ -6,7 +6,7 @@ defmodule ImplGameTest do
     game = Game.new_game()
 
     assert game.turns_left == 7
-    assert game.game_state == :initializing
+    assert game.status == :initializing
     assert length(game.letters) > 0
   end
 
@@ -14,7 +14,7 @@ defmodule ImplGameTest do
     game = Game.new_game("wombat")
 
     assert game.turns_left == 7
-    assert game.game_state == :initializing
+    assert game.status == :initializing
     assert game.letters == ["w", "o", "m", "b", "a", "t"]
   end
 
@@ -30,7 +30,7 @@ defmodule ImplGameTest do
   test "state doesn't change if game is won or lost" do
     for state <- [:won, :lost] do
       game = Game.new_game("wombat")
-      game = Map.put(game, :game_state, state)
+      game = Map.put(game, :status, state)
       {new_game, tally} = Game.make_move(game, "x")
       assert new_game == game
     end
@@ -40,13 +40,13 @@ defmodule ImplGameTest do
     game = Game.new_game()
 
     {game, _tally} = Game.make_move(game, "x")
-    assert game.game_state != :already_used
+    assert game.status != :already_used
 
     {game, _tally} = Game.make_move(game, "y")
-    assert game.game_state != :already_used
+    assert game.status != :already_used
 
     {game, _tally} = Game.make_move(game, "x")
-    assert game.game_state == :already_used
+    assert game.status == :already_used
   end
 
   test "we record letters used" do
@@ -62,10 +62,26 @@ defmodule ImplGameTest do
     game = Game.new_game("hello")
 
     {game, tally} = Game.make_move(game, "h")
-    assert tally.game_state == :good_guess
+    assert tally.status == :good_guess
     assert tally.turns_left == 6
 
     {game, tally} = Game.make_move(game, "x")
-    assert tally.game_state == :bad_guess
+    assert tally.status == :bad_guess
+  end
+
+  test "recognize a letter not in the word" do
+    game = Game.new_game("hello")
+
+    {game, tally} = Game.make_move(game, "z")
+    assert tally.turns_left == 6
+    assert tally.status == :bad_guess
+
+    {game, tally} = Game.make_move(game, "h")
+    assert tally.turns_left == 5
+    assert tally.status == :good_guess
+
+    {game, tally} = Game.make_move(game, "e")
+    assert tally.turns_left == 4
+    assert tally.status == :good_guess
   end
 end
