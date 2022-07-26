@@ -31,9 +31,15 @@ defmodule Hangman.Impl.Game do
     |> return_with_tally()
   end
 
-  defp tally(game) do
+  @spec tally(t) :: %{
+          letters: list(String.t()),
+          status: Type.status(),
+          turns_left: integer(),
+          used: list(String.t())
+        }
+  def tally(game) do
     maybe_reveal = fn letter ->
-      if MapSet.member?(game.used, letter) do
+      if MapSet.member?(game.used, letter) or game.status == :lost do
         letter
       else
         "_"
