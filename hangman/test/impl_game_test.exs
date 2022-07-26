@@ -93,11 +93,34 @@ defmodule ImplGameTest do
       ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], ["a", "e"]],
       ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], ["a", "e", "x"]]
     ]
-    |> test_sequence()
+    |> test_sequence("hello")
   end
 
-  def test_sequence(script) do
-    game = Game.new_game("hello")
+  test "winning game" do
+    [
+      ["h", :good_guess, 7, ["h", "_", "_", "_", "_"], ["h"]],
+      ["e", :good_guess, 7, ["h", "e", "_", "_", "_"], ["e", "h"]],
+      ["l", :good_guess, 7, ["h", "e", "l", "l", "_"], ["e", "h", "l"]],
+      ["o", :won, 7, ["h", "e", "l", "l", "o"], ["e", "h", "l", "o"]]
+    ]
+    |> test_sequence("hello")
+  end
+
+  test "loosing game" do
+    [
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["b", :bad_guess, 5, ["_", "_", "_", "_", "_"], ["a", "b"]],
+      ["c", :bad_guess, 4, ["_", "_", "_", "_", "_"], ["a", "b", "c"]],
+      ["d", :bad_guess, 3, ["_", "_", "_", "_", "_"], ["a", "b", "c", "d"]],
+      ["f", :bad_guess, 2, ["_", "_", "_", "_", "_"], ["a", "b", "c", "d", "f"]],
+      ["g", :bad_guess, 1, ["_", "_", "_", "_", "_"], ["a", "b", "c", "d", "f", "g"]],
+      ["i", :lost, 0, ["_", "_", "_", "_", "_"], ["a", "b", "c", "d", "f", "g", "i"]]
+    ]
+    |> test_sequence("hello")
+  end
+
+  def test_sequence(script, word) do
+    game = Game.new_game(word)
     Enum.reduce(script, game, &check_move/2)
   end
 

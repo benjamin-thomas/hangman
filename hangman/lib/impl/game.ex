@@ -54,22 +54,27 @@ defmodule Hangman.Impl.Game do
 
   defp update(game, guess) do
     game_over? = game.status in [:won, :lost]
-    duplicate_move? = MapSet.member?(game.used, guess)
-    good_guess? = Enum.member?(game.letters, guess)
-
-    {status, turns_left} =
-      cond do
-        game_over? -> {game.status, game.turns_left}
-        duplicate_move? -> {:already_used, game.turns_left}
-        good_guess? -> {:good_guess, game.turns_left}
-        not good_guess? -> {:bad_guess, game.turns_left - 1}
-      end
 
     used =
       if game_over? do
         game.used
       else
         MapSet.put(game.used, guess)
+      end
+
+    duplicate_move? = MapSet.member?(game.used, guess)
+    good_guess? = Enum.member?(game.letters, guess)
+    won? = Enum.all?(game.letters, fn letter -> MapSet.member?(used, letter) end)
+    lost? = game.turns_left == 1 and not good_guess?
+
+    {status, turns_left} =
+      cond do
+        game_over? -> {game.status, game.turns_left}
+        won? -> {:won, game.turns_left}
+        lost? -> {:lost, game.turns_left - 1}
+        duplicate_move? -> {:already_used, game.turns_left}
+        good_guess? -> {:good_guess, game.turns_left}
+        not good_guess? -> {:bad_guess, game.turns_left - 1}
       end
 
     %{game | status: status, turns_left: turns_left, used: used}
