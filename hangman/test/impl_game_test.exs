@@ -1,6 +1,8 @@
+# find ./lib/ ./test -type f | entr -c mix test --cover
 defmodule ImplGameTest do
   use ExUnit.Case
   alias Hangman.Impl.Game
+  doctest(Game)
 
   test "new_game() returns a structure" do
     game = Game.new_game()

@@ -52,7 +52,32 @@ defmodule Hangman.Impl.Game do
     {game, tally(game)}
   end
 
+  @spec validate_input(String.t()) :: {:err, nil} | {:ok, String.t()}
+  @doc """
+  Ensures the guess is a single lower ascii alpha character.
+
+  ## Examples
+
+    iex> Hangman.Impl.Game.validate_input("a")
+    {:ok, "a"}
+
+    iex> Hangman.Impl.Game.validate_input("ab")
+    {:err, nil}
+
+    iex> Hangman.Impl.Game.validate_input("+")
+    {:err, nil}
+  """
+  def validate_input(guess) do
+    if String.length(guess) == 1 and guess =~ ~r/[a-z]/ do
+      {:ok, guess}
+    else
+      {:err, nil}
+    end
+  end
+
   defp update(game, guess) do
+    {:ok, guess} = validate_input(guess)
+
     game_over? = game.status in [:won, :lost]
 
     used =
