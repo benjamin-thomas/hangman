@@ -3,7 +3,8 @@ defmodule DictionaryTest do
   doctest Dictionary
 
   test "returns a random word" do
-    word_length = Dictionary.random_word() |> String.length()
+    words = Dictionary.start()
+    word_length = Dictionary.random_word(words) |> String.length()
     assert word_length > 0
   end
 end
