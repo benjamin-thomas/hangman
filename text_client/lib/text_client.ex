@@ -1,4 +1,4 @@
 defmodule TextClient do
-  @spec start() :: :ok
+  @spec start :: :ok
   defdelegate start(), to: TextClient.Impl.Player
 end
