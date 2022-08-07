@@ -33,6 +33,9 @@ defmodule B1.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # App's dependencies
+      {:hangman, path: "../hangman"},
+      # Framework's dependencies
       {:phoenix, "~> 1.6.11"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
