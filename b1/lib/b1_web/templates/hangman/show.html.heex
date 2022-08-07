@@ -8,7 +8,8 @@
 
     <div class="column">
 
-        <table>
+
+        <table id="tally">
             <tr>
                 <th>Turns left:</th>
                 <td><%= @tally.turns_left %></td>
@@ -21,19 +22,14 @@
 
             <tr>
                 <th>Word so far:</th>
-                <td><%= @tally.letters |> Enum.join("_") %></td>
+                <td><%= @tally.letters |> Enum.join(" ") %></td>
             </tr>
         </table>
 
+        <%= status(@tally.status) %>
+
         <div>
-            <%= form_for(@conn, Routes.hangman_path(@conn, :update), [as: "make_move", autocomplete: "off", method: :put], fn f -> %>
-
-            <%= label(f, :guess) %>
-            <%= text_input(f, :guess, autofocus: true) %>
-
-            <%= submit("Make next guess") %>
-
-            <% end) %>
+            <%= next_move_or_restart(@conn, @tally.status) %>
         </div>
     </div>
 </div>

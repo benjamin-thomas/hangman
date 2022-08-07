@@ -2,7 +2,7 @@
   <h1>Welcome to Phoenix!</h1>
   <p>Peace of mind from prototype to production</p>
   <p>
-  Play a new <%= link "hangman game", to: Routes.hangman_path(@conn, :new) %>
+  <%= button "Start a new game", to: Routes.hangman_path(@conn, :create) %>
   </p>
 </section>
 
