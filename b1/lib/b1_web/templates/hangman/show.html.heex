@@ -1,0 +1,39 @@
+<div class="row">
+
+    <div class="column">
+        <pre>
+        <%= stick_man(@tally.turns_left) %>
+        </pre>
+    </div>
+
+    <div class="column">
+
+        <table>
+            <tr>
+                <th>Turns left:</th>
+                <td><%= @tally.turns_left %></td>
+            </tr>
+
+            <tr>
+                <th>Letters used:</th>
+                <td><%= @tally.used |> Enum.join(", ") %></td>
+            </tr>
+
+            <tr>
+                <th>Word so far:</th>
+                <td><%= @tally.letters |> Enum.join("_") %></td>
+            </tr>
+        </table>
+
+        <div>
+            <%= form_for(@conn, Routes.hangman_path(@conn, :update), [as: "make_move", autocomplete: "off", method: :put], fn f -> %>
+
+            <%= label(f, :guess) %>
+            <%= text_input(f, :guess, autofocus: true) %>
+
+            <%= submit("Make next guess") %>
+
+            <% end) %>
+        </div>
+    </div>
+</div>
