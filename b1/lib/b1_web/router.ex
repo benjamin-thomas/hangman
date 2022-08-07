@@ -25,7 +25,8 @@ defmodule B1Web.Router do
 
     get "/", PageController, :index
 
-    get "/hangman", HangmanController, :new
+    get "/hangman/new", HangmanController, :new
+    get "/hangman", HangmanController, :show
     post "/hangman", HangmanController, :create
     put "/hangman", HangmanController, :update
   end
