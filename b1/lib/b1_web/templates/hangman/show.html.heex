@@ -7,24 +7,9 @@
     </div>
 
     <div class="column">
+        <%= render("_tally_info.html", tally: @tally) %>
 
 
-        <table id="tally">
-            <tr>
-                <th>Turns left:</th>
-                <td><%= @tally.turns_left %></td>
-            </tr>
-
-            <tr>
-                <th>Letters used:</th>
-                <td><%= @tally.used |> Enum.join(", ") %></td>
-            </tr>
-
-            <tr>
-                <th>Word so far:</th>
-                <td><%= @tally.letters |> Enum.join(" ") %></td>
-            </tr>
-        </table>
 
         <%= status(@tally.status) %>
 
