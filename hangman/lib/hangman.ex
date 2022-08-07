@@ -5,7 +5,7 @@ defmodule Hangman do
 
   @spec new_game :: game
   def new_game do
-    {:ok, pid} = Runtime.Server.start_link()
+    {:ok, pid} = Hangman.Runtime.Application.start_game()
     pid
   end
 

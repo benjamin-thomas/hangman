@@ -13,11 +13,6 @@ defmodule Dictionary.Runtime.Server do
 
   @spec random_word() :: String.t()
   def random_word() do
-    # Simulate failure
-    if :rand.uniform() < 0.33 do
-      Agent.get(@me, fn _ -> exit(:boom) end)
-    end
-
     Agent.get(@me, &WordList.random_word/1)
   end
 end
