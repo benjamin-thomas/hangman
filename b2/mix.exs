@@ -33,6 +33,7 @@ defmodule B2.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:hangman, path: "../hangman"},
       {:phoenix, "~> 1.6.11"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
